@@ -52,11 +52,6 @@ type Config struct {
 
 // ParseConfig validates and parses step inputs related to code signing and returns with a Config
 func ParseConfig(input Input, cmdFactory command.Factory) (Config, error) {
-	certificatesAndPassphrases, err := parseCertificatesAndPassphrases(input.CertificateURLList, string(input.CertificatePassphraseList))
-	if err != nil {
-		return Config{}, err
-	}
-
 	if strings.TrimSpace(input.KeychainPath) == "" {
 		return Config{}, fmt.Errorf("keychain path is not specified")
 	}
@@ -75,7 +70,7 @@ func ParseConfig(input Input, cmdFactory command.Factory) (Config, error) {
 	}
 
 	return Config{
-		CertificatesAndPassphrases:   certificatesAndPassphrases,
+		CertificatesAndPassphrases:   []certdownloader.CertificateAndPassphrase{},
 		Keychain:                     *keychainWriter,
 		DistributionMethod:           autocodesign.DistributionType(input.DistributionMethod),
 		FallbackProvisioningProfiles: fallbackProfiles,

@@ -145,22 +145,6 @@ func (m *Manager) PrepareCodesigning() (*devportalservice.APIKeyConnection, erro
 			m.logger.Println()
 			m.logger.Infof("Code signing asset management with xcodebuild")
 			m.logger.Printf("Reason: %s", reason)
-			m.logger.Println()
-			m.logger.TInfof("Downloading certificates...")
-			certificates, err := m.downloadCertificates()
-			if err != nil {
-				return nil, err
-			}
-
-			if err := m.validateCertificatesForXcodeManagedSigning(certificates); err != nil {
-				return nil, err
-			}
-
-			m.logger.Println()
-			m.logger.TInfof("Installing certificates...")
-			if err := m.installCertificates(certificates); err != nil {
-				return nil, err
-			}
 
 			needsTestDevices := autocodesign.DistributionTypeRequiresDeviceList([]autocodesign.DistributionType{m.opts.ExportMethod})
 			if needsTestDevices && m.opts.RegisterTestDevices && len(m.bitriseTestDevices) != 0 {
